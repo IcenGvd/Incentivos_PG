@@ -1,0 +1,65 @@
+# Procesa en GitHub los archivos que sube actualizar.bat (carpeta entrada/) y publica el tablero en GitHub Pages.
+name: Actualizar tablero
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: actualizar-tablero
+  cancel-in-progress: false
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Descomprimir archivos de entrada
+        run: |
+          mkdir -p work
+          shopt -s nullglob
+          for f in entrada/*.gz entrada/historia/*.gz; do
+            gunzip -c "$f" > "work/$(basename "${f%.gz}")"
+          done
+          ls -la work
+
+      - name: Procesar (mismo cálculo que el tablero)
+        run: |
+          if [ -n "$(ls -A work)" ]; then node scripts/procesar.js work || test $? -eq 2; fi
+
+      - name: Guardar datos en el repositorio
+        run: |
+          git config user.name "actualizador"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/state.json data/manifest.json 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "Datos actualizados $(date -u +'%Y-%m-%d %H:%M') UTC"
+            git push
+          fi
+
+      - name: Preparar página (solo el tablero y sus datos)
+        run: |
+          mkdir -p _site/data
+          cp index.html _site/
+          cp data/state.json _site/data/
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4
