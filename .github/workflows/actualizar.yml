@@ -51,7 +51,11 @@ jobs:
           git add data/state.json data/manifest.json 2>/dev/null || true
           if ! git diff --cached --quiet; then
             git commit -m "Datos actualizados $(date -u +'%Y-%m-%d %H:%M') UTC"
-            git push
+            # si mientras tanto llegó otro cambio (otra subida o una edición), se integra y se reintenta
+            for i in 1 2 3; do
+              git push && break
+              git pull --rebase -X theirs origin main
+            done
           fi
 
       - name: Preparar página (solo el tablero y sus datos)
