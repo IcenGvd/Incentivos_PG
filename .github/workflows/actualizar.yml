@@ -10,7 +10,7 @@ permissions:
   contents: write
   pages: write
   id-token: write
-  actions: read
+  actions: read   # necesario para que la publicación encuentre el paquete de la página
 
 concurrency:
   group: actualizar-tablero
@@ -35,6 +35,11 @@ jobs:
           shopt -s nullglob
           for f in entrada/*.gz entrada/historia/*.gz; do
             gunzip -c "$f" > "work/$(basename "${f%.gz}")"
+          done
+          # archivos grandes subidos en partes (.gz.p01, .gz.p02…): se unen y se descomprimen
+          for g in entrada/*.gz.p01 entrada/historia/*.gz.p01; do
+            b="${g%.p01}"
+            cat "$b".p[0-9][0-9] | gunzip -c > "work/$(basename "${b%.gz}")"
           done
           ls -la work
 
