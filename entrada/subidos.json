@@ -8,5 +8,35 @@
   "sha1": "c980c2b19ca7896b471263849bea44be749a80dd",
   "archivo": "TC VENDEDORES MASLOW NOV'26.xlsm",
   "tipo": "TC Maslow"
+ },
+ "BloquesdeMarca.xlsm": {
+  "sha1": "dc82e57c3760abb0117f50cd04e0071c0b9cbb9d",
+  "archivo": "BloquesdeMarca2026.xlsm",
+  "tipo": "Bloques de marca",
+  "partes": 1
+ },
+ "CalendarioREAL.csv": {
+  "sha1": "17344c92ca3ade0c676e68c8c93f27a29dd7cea0",
+  "archivo": "CalendarioREAL.csv",
+  "tipo": "Calendario real",
+  "partes": 1
+ },
+ "MECANICA.xlsx": {
+  "sha1": "9082ac2506d95dfaadd5147d665068e37857955e",
+  "archivo": "MECANICA.xlsx",
+  "tipo": "Mecánica",
+  "partes": 1
+ },
+ "MECANICA_EJECUCION.xlsx": {
+  "sha1": "a32850eb1664d0a1890249febf3b8890cc96696f",
+  "archivo": "MECANICA EJECUCION.xlsx",
+  "tipo": "Mecánica de ejecución",
+  "partes": 1
+ },
+ "historia/BDPG2026.csv": {
+  "sha1": "7e11daed87f79c34cd3b5e91db97180aebfb8a7b",
+  "archivo": "BDPG2026.csv",
+  "tipo": "Historia de venta",
+  "partes": 5
  }
 }
