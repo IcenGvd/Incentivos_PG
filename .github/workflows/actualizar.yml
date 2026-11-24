@@ -5,6 +5,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      todo:
+        description: 'Volver a procesar todos los archivos (después de cambiar la mecánica o si faltan comparaciones MA, P3M o LY)'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -44,7 +49,9 @@ jobs:
 
       - name: Procesar (mismo cálculo que el tablero)
         run: |
-          if [ -n "$(ls -A work)" ]; then node scripts/procesar.js work || test $? -eq 2; fi
+          MODO=""
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.todo }}" = "true" ]; then MODO="--todo"; echo "Se vuelven a procesar todos los archivos."; fi
+          if [ -n "$(ls -A work)" ]; then node --max-old-space-size=12000 scripts/procesar.js work $MODO || test $? -eq 2; fi
 
       - name: Guardar datos en el repositorio
         run: |
