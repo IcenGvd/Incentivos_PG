@@ -21,6 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main   # siempre la última versión del repositorio, no la del momento en que se lanzó
 
       - uses: actions/setup-node@v4
         with:
@@ -48,15 +50,20 @@ jobs:
         run: |
           git config user.name "actualizador"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/state.json data/manifest.json 2>/dev/null || true
-          if ! git diff --cached --quiet; then
+          cp data/state.json /tmp/state.json
+          [ -f data/manifest.json ] && cp data/manifest.json /tmp/manifest.json
+          # se guarda sobre la última versión de GitHub (por si llegó otro cambio mientras se procesaba)
+          for i in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/state.json data/state.json
+            [ -f /tmp/manifest.json ] && cp /tmp/manifest.json data/manifest.json
+            git add data/state.json data/manifest.json 2>/dev/null || true
+            if git diff --cached --quiet; then echo "Sin cambios en los datos."; break; fi
             git commit -m "Datos actualizados $(date -u +'%Y-%m-%d %H:%M') UTC"
-            # si mientras tanto llegó otro cambio (otra subida o una edición), se integra y se reintenta
-            for i in 1 2 3; do
-              git push && break
-              git pull --rebase -X theirs origin main
-            done
-          fi
+            if git push origin HEAD:main; then echo "Datos guardados."; break; fi
+            echo "Llegó otro cambio, reintentando ($i)…"; sleep 5
+          done
 
       - name: Preparar página (solo el tablero y sus datos)
         run: |
