@@ -1,13 +1,15 @@
 {
  "BDPGMESACTUAL.csv": {
-  "sha1": "15404ff522f6f8aa777b964e6846c6db41eeb544",
+  "sha1": "e282415ddd7e760665bba13c9c9883a6d68c336c",
   "archivo": "BDPGMESACTUAL.csv",
-  "tipo": "Venta del mes"
+  "tipo": "Venta del mes",
+  "partes": 1
  },
  "TC_MASLOW.xlsm": {
-  "sha1": "c980c2b19ca7896b471263849bea44be749a80dd",
+  "sha1": "48018ed16012d250ee3abfa08a6ba3ff37c8f924",
   "archivo": "TC VENDEDORES MASLOW NOV'26.xlsm",
-  "tipo": "TC Maslow"
+  "tipo": "TC Maslow",
+  "partes": 1
  },
  "BloquesdeMarca.xlsm": {
   "sha1": "dc82e57c3760abb0117f50cd04e0071c0b9cbb9d",
